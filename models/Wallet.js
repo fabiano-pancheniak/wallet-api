@@ -4,14 +4,8 @@ const { Schema } = mongoose
 const walletSchema = new Schema({
     user: String,
     balance: Number,
-    incomes: [{
-        amount: Number,
-        date: {
-            type: Date,
-            default: Date.now()
-        }
-    }],
-    expenses: [{
+    operations: [{
+        type: {type: String},
         amount: Number,
         date: {
             type: Date,
