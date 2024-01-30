@@ -1,10 +1,22 @@
 const Wallet = require("../models/Wallet")
 const asyncHandler = require("express-async-handler")
+const mongoose = require('mongoose')
 require('dotenv').config()  
 
-exports.getWallet = asyncHandler(async (req,res) => {       
-    const wallets = await Wallet.find({})
-    res.status(200).json({ wallets })   
+exports.getWallet = asyncHandler(async (req,res) => {     
+    const walletID = req.params.id
+    
+    if(!mongoose.Types.ObjectId.isValid(walletID)){   
+        return res.status(404).json({message: `Wallet not found`})
+    }
+
+    const wallet = await Wallet.findById({_id: walletID})
+    
+    if(!wallet){
+        return res.status(404).json({message: `Wallet not found`})
+    }
+
+    res.status(200).json({ wallet })   
 })
 
 exports.createWallet = asyncHandler(async (req, res) => {

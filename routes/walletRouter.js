@@ -3,8 +3,10 @@ const router = express.Router()
 const {getWallet, createWallet, updateIncomeOrExpense, removeIncome, removeExpense} = require("../controllers/walletController")
 
 router.route("/")
-    .get(getWallet)
     .post(createWallet)
+
+router.route("/:id")
+    .get(getWallet)
 
 router.route("/:id/income")
     .post(updateIncomeOrExpense)
