@@ -27,7 +27,15 @@ exports.createWallet = asyncHandler(async (req, res) => {
 
 exports.updateOperation = asyncHandler(async(req,res) => {
     const walletID = req.params.id
+    let newBalance = 0
     let wallet = await Wallet.findById(walletID)
+
+    if(req.body.type === 'income'){
+        newBalance = wallet.balance + req.body.amount
+    }
+    if(req.body.type === 'expense'){
+        newBalance = wallet.balance - req.body.amount
+    }
 
     if(!wallet){
         return res.status(404).json({message: `wallet ${walletID} not found`})
@@ -35,7 +43,8 @@ exports.updateOperation = asyncHandler(async(req,res) => {
 
     let updatedWallet = await Wallet.findOneAndUpdate(
         { _id: walletID }, 
-        { $push: { 
+        {   balance: newBalance,
+            $push: { 
                   operations: {
                         amount: req.body.amount,
                         type: req.body.type,
