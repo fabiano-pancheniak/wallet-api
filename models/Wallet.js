@@ -10,8 +10,14 @@ const walletSchema = new Schema({
         date: {
             type: Date,
             default: Date.now()
+        },
+        category: String
+    }],
+    customCategories: [{
+        type: {type: String},
+        description: String
         }
-    }]
+    ]
 })
 
 const Wallet = mongoose.model("Wallet", walletSchema)

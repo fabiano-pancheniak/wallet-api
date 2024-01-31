@@ -11,10 +11,13 @@ exports.getWallet = asyncHandler(async (req,res) => {
     }
 
     const wallet = await Wallet.findById({_id: walletID})
+
     
     if(!wallet){
         return res.status(404).json({message: `Wallet not found`})
     }
+
+    wallet.operations.sort((a, b) => b.date - a.date);
 
     res.status(200).json({ wallet })   
 })
@@ -48,12 +51,35 @@ exports.updateOperation = asyncHandler(async(req,res) => {
                   operations: {
                         amount: req.body.amount,
                         type: req.body.type,
-                        date: req.body.date
+                        date: req.body.date,
+                        category: req.body.category
                     }  
                 } 
         },
         {new: true})
         return res.status(201).json(updatedWallet)
+
+})
+
+exports.createCustomCategory = asyncHandler(async(req,res) => {
+    const walletID = req.params.id
+
+    let wallet = await Wallet.findOneAndUpdate(
+        { _id: walletID }, 
+        {  $push: { 
+                customCategories: {
+                    type: req.body.type,
+                    description: req.body.description
+                }  
+            } 
+        },
+        {new: true})
+
+        if(!wallet){
+            return res.status(404).json({message: `wallet ${walletID} not found`})
+        }
+
+        return res.status(201).json(wallet)
 
 })
 
