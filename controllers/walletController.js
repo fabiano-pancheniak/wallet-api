@@ -5,12 +5,13 @@ require('dotenv').config()
 
 exports.getWallet = asyncHandler(async (req,res) => {     
     const walletID = req.params.id
+    let newBalance = 0
     
     if(!mongoose.Types.ObjectId.isValid(walletID)){   
         return res.status(404).json({message: `Wallet not found`})
     }
 
-    const wallet = await Wallet.findById({_id: walletID})
+    let wallet = await Wallet.findById({_id: walletID})
 
     
     if(!wallet){
@@ -18,6 +19,21 @@ exports.getWallet = asyncHandler(async (req,res) => {
     }
 
     wallet.operations.sort((a, b) => b.date - a.date);
+
+    wallet.operations.forEach(item => {
+        if(item.type === 'income'){
+            newBalance += item.amount
+        }
+        if(item.type === 'expense'){
+            newBalance -= item.amount
+        }
+    });
+
+    wallet = await Wallet.findOneAndUpdate(
+        { _id: walletID }, 
+        { balance: newBalance },
+        {new: true})
+    return res.status(201).json({ wallet })
 
     res.status(200).json({ wallet })   
 })
@@ -57,7 +73,7 @@ exports.updateOperation = asyncHandler(async(req,res) => {
                 } 
         },
         {new: true})
-        return res.status(201).json(updatedWallet)
+    return res.status(201).json(updatedWallet)
 
 })
 

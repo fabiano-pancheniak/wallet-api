@@ -9,7 +9,7 @@ const walletSchema = new Schema({
         amount: Number,
         date: {
             type: Date,
-            default: Date.now()
+            default: new Date()
         },
         category: String
     }],
