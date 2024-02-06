@@ -1,5 +1,6 @@
 const express = require("express")
 const walletRouter = require("./routes/walletRouter")
+const authRouter = require('./routes/auth');
 const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
@@ -9,7 +10,11 @@ const port = 3000
 
 app.use(cors())
 app.use(express.json())
-app.use("/api/wallet", walletRouter)
+const authenticateUser = require('./middleware/authentication');
+
+app.use("/api/auth", authRouter)
+app.use("/api/wallet", authenticateUser ,walletRouter)
+
 
 const start = async (req, res) => {
     try {

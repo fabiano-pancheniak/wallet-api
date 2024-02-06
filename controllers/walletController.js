@@ -6,6 +6,7 @@ require('dotenv').config()
 exports.getWallet = asyncHandler(async (req,res) => {     
     const walletID = req.params.id
     let newBalance = 0
+    console.log(req.user.userId)
     
     if(!mongoose.Types.ObjectId.isValid(walletID)){   
         return res.status(404).json({message: `Wallet not found`})
@@ -34,8 +35,6 @@ exports.getWallet = asyncHandler(async (req,res) => {
         { balance: newBalance },
         {new: true})
     return res.status(201).json({ wallet })
-
-    res.status(200).json({ wallet })   
 })
 
 exports.createWallet = asyncHandler(async (req, res) => {
