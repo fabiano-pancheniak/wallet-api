@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const walletSchema = new Schema({
-    user: String,
+    userID: String,
     balance: Number,
     operations: [{
         type: {type: String},

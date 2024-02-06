@@ -10,16 +10,23 @@ exports.login = async (req, res) => {
   const { email, password } = req.body
 
   if (!email || !password) {
-    throw new Error('Please provide email and password')
+    return res.status(400).json({ error: 'Please provide email and password' });
   }
-  const user = await User.findOne({ email })
+
+  const user = await User.findOne({ email });
+
   if (!user) {
-    throw new Error('Invalid Credentials')
+    return res.status(401).json({ error: 'Invalid credentials' });
   }
-  const isPasswordCorrect = await user.comparePassword(password)
+
+  const isPasswordCorrect = await user.comparePassword(password);
+
   if (!isPasswordCorrect) {
-    throw new Error('Invalid Credentials')
+    return res.status(401).json({ error: 'Invalid credentials' });
   }
-  const token = user.createJWT()
-  res.status(201).json({ user: { name: user.name, userID: user.id }, token })
-}
+
+  const token = user.createJWT();
+  
+  res.status(201).json({ user: { name: user.name, userID: user.id }, token });
+};
+
