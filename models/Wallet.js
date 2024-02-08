@@ -3,7 +3,7 @@ const { Schema } = mongoose
 
 const walletSchema = new Schema({
     userID: String,
-    balance: Number,
+    balance: {type: Number, default: 0},
     operations: [{
         type: {type: String},
         amount: Number,

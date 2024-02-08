@@ -16,6 +16,7 @@ exports.getWallet = asyncHandler(async (req,res) => {
     if(wallet.operations.length != 0){
 
         wallet.operations.sort((a, b) => b.date - a.date);
+
         
         wallet.operations.forEach(item => {
             if(item.type === 'income'){
@@ -24,13 +25,13 @@ exports.getWallet = asyncHandler(async (req,res) => {
             if(item.type === 'expense'){
                 newBalance -= item.amount
             }
-        });
-        
+
+        });    
+
         wallet = await Wallet.findOneAndUpdate(
             { userID: userID }, 
             { balance: newBalance },
             {new: true})
-            
     }
             
     if(!wallet){
