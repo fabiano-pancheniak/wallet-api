@@ -13,8 +13,12 @@ exports.getWallet = asyncHandler(async (req,res) => {
     }
 
     let wallet = await Wallet.findOne({userID: userID})
-    if(wallet.operations.length != 0){
 
+    if(!wallet){
+        wallet = await Wallet.create({userID: userID, balance: 0})
+    }
+
+    if(wallet.operations.length != 0){
         wallet.operations.sort((a, b) => b.date - a.date);
 
         
